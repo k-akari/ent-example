@@ -1,5 +1,5 @@
 // Package controller contains handler functions
-package controller
+package usecase
 
 import (
 	"context"
