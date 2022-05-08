@@ -4,4 +4,7 @@ migrate:
 app:
 	go run ./cmd/app/main.go
 
-.PHONY: migrate app
+lint:
+	@staticcheck ./... && go vet ./...
+
+.PHONY: migrate app lint
