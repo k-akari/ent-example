@@ -5,7 +5,7 @@ go 1.18
 require (
 	entgo.io/ent v0.10.1
 	github.com/google/uuid v1.3.0
-	github.com/lib/pq v1.10.4
+	github.com/lib/pq v1.10.5
 )
 
 require (
