@@ -25,6 +25,8 @@ func HandleUsers(c *ent.Client, ctx context.Context) http.HandlerFunc {
 			}
 		case "POST":
 			err = createUser(w, r, c, ctx)
+		case "DELETE":
+			err = deleteUser(w, r, c, ctx)
 		default:
 			http.Error(w, r.Method+" method not allowed", http.StatusMethodNotAllowed)
 		}
@@ -113,5 +115,23 @@ func createUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx conte
 
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprint(w, buf.String())
+	return
+}
+
+func deleteUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) (err error) {
+	id, err := strconv.Atoi(path.Base(r.URL.Path))
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	err = c.User.DeleteOneID(id).Exec(ctx)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
 	return
 }
