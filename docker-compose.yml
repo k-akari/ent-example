@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  db:
+    build:
+      context: .
+      dockerfile: ./build/db/Dockerfile
+    ports:
+      - 5432:5432
+    volumes:
+      - db-store:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=database
+  app:
+    build:
+      context: .
+      dockerfile: ./build/app/Dockerfile
+    command: /bin/ash
+    volumes:
+      - .:/go/src/project
+      - ~/.ssh:/root/.ssh # 要見直し
+      - ~/.gitconfig:/root/.gitconfig # 要見直し
+    stdin_open: true
+    tty: true
+volumes:
+  db-store:
