@@ -2,7 +2,6 @@
 package controller
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -57,13 +56,6 @@ func listUsers(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx contex
 		return
 	}
 
-	var buf bytes.Buffer
-	enc := json.NewEncoder(&buf)
-	if err = enc.Encode(&users); err != nil {
-		utils.Return(w, http.StatusInternalServerError, err, nil)
-		return
-	}
-
 	utils.Return(w, http.StatusOK, nil, users)
 }
 
@@ -84,13 +76,6 @@ func createUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx conte
 		SetPassword(userParams.Password).
 		Save(ctx)
 	if err != nil {
-		utils.Return(w, http.StatusInternalServerError, err, nil)
-		return
-	}
-
-	var buf bytes.Buffer
-	enc := json.NewEncoder(&buf)
-	if err = enc.Encode(&user); err != nil {
 		utils.Return(w, http.StatusInternalServerError, err, nil)
 		return
 	}
