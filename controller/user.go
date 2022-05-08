@@ -10,6 +10,7 @@ import (
 	"path"
 	"project/ent"
 	"project/ent/user"
+	"project/utils"
 	"strconv"
 )
 
@@ -21,7 +22,7 @@ func HandleUsers(c *ent.Client, ctx context.Context) http.HandlerFunc {
 			if path.Base(r.URL.Path) == "users" {
 				err = listUsers(w, r, c, ctx)
 			} else {
-				err = showUser(w, r, c, ctx)
+				showUser(w, r, c, ctx)
 			}
 		case "POST":
 			err = createUser(w, r, c, ctx)
@@ -40,25 +41,20 @@ func HandleUsers(c *ent.Client, ctx context.Context) http.HandlerFunc {
 	}
 }
 
-func showUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) (err error) {
+func showUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
 	id, err := strconv.Atoi(path.Base(r.URL.Path))
 	if err != nil {
+		utils.Return(w, http.StatusBadRequest, err, nil)
 		return
 	}
 
 	user, err := c.User.Query().Where(user.ID(id)).Only(ctx)
 	if err != nil {
+		utils.Return(w, http.StatusNotFound, err, nil)
 		return
 	}
 
-	jsonData, err := json.Marshal(user)
-	if err != nil {
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprint(w, string(jsonData))
-	return
+	utils.Return(w, http.StatusOK, nil, user)
 }
 
 func listUsers(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) (err error) {
