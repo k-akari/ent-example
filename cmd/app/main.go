@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"project/controller"
 	"project/ent"
+	"project/router"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -18,8 +18,7 @@ func main() {
 	}
 	defer client.Close()
 
-	ctx := context.Background()
-	http.HandleFunc("/users/", controller.HandleUsers(client, ctx))
+	router.RegisterRouter(client)
 
 	server := &http.Server{
 		Addr:           "0.0.0.0:8080",

@@ -12,28 +12,7 @@ import (
 	"strconv"
 )
 
-func HandleUsers(c *ent.Client, ctx context.Context) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			if path.Base(r.URL.Path) == "users" {
-				listUsers(w, r, c, ctx)
-			} else {
-				showUser(w, r, c, ctx)
-			}
-		case "POST":
-			createUser(w, r, c, ctx)
-		case "PATCH":
-			updateUser(w, r, c, ctx)
-		case "DELETE":
-			deleteUser(w, r, c, ctx)
-		default:
-			http.Error(w, r.Method+" method not allowed", http.StatusMethodNotAllowed)
-		}
-	}
-}
-
-func showUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
+func ShowUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
 	id, err := strconv.Atoi(path.Base(r.URL.Path))
 	if err != nil {
 		utils.Return(w, http.StatusBadRequest, err, nil)
@@ -49,7 +28,7 @@ func showUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context
 	utils.Return(w, http.StatusOK, nil, user)
 }
 
-func listUsers(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
+func ListUsers(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
 	users, err := c.User.Query().All(ctx)
 	if err != nil {
 		utils.Return(w, http.StatusInternalServerError, err, nil)
@@ -59,7 +38,7 @@ func listUsers(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx contex
 	utils.Return(w, http.StatusOK, nil, users)
 }
 
-func createUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
+func CreateUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
 	len := r.ContentLength
 	body := make([]byte, len)
 	r.Body.Read(body)
@@ -83,7 +62,7 @@ func createUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx conte
 	utils.Return(w, http.StatusCreated, nil, user)
 }
 
-func updateUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
+func UpdateUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
 	id, err := strconv.Atoi(path.Base(r.URL.Path))
 	if err != nil {
 		utils.Return(w, http.StatusBadRequest, err, nil)
@@ -112,7 +91,7 @@ func updateUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx conte
 	utils.Return(w, http.StatusOK, nil, user)
 }
 
-func deleteUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
+func DeleteUser(w http.ResponseWriter, r *http.Request, c *ent.Client, ctx context.Context) {
 	id, err := strconv.Atoi(path.Base(r.URL.Path))
 	if err != nil {
 		utils.Return(w, http.StatusBadRequest, err, nil)
