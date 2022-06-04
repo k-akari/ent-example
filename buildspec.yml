@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region ${AWS_REGION})
+  build:
+    commands:
+      - echo Building the Docker image on `date`
+      - docker build --no-cache -t ent-example:latest .
+      - docker tag ent-example:latest ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/ent-example:latest
+  post_build:
+    commands:
+      - echo Pushing the Docker image on `date`
+      - docker push ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/ent-example:latest
