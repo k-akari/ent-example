@@ -1,0 +1,40 @@
+name: CI
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  golang:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Detect go version
+        id: go-version
+        run: echo "::set-output name=GO_VERSION::$(cat .go-version)"
+      - name: Setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: "${{ steps.go-version.outputs.GO_VERSION }}"
+      - name: Cache modules
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: Build
+        run: go build -v ./...
+      - name: Staticcheck
+        uses: dominikh/staticcheck-action@v1.2.0
+      - name: Run test
+        run: make test
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ./tmp/cover.out
+          fail_ci_if_error: false
+          verbose: false
