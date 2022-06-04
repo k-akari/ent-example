@@ -1,0 +1,35 @@
+name: Create Pull Request
+
+on:
+  push:
+    branches:
+      - 'develop'
+
+jobs:
+  create-release-pr:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set_branch
+        name: Get current branch name
+        run: |
+          echo "::set-output name=head_branch::${GITHUB_REF#refs/heads/}"
+          echo "::set-output name=base_branch::main"
+      - id: set_pr_title
+        name: Set the title of the PR
+        run: |
+          pr_title="Merge ${{ steps.set_branch.outputs.head_branch }} into ${{ steps.set_branch.outputs.base_branch }}"
+          echo "::set-output name=pr_title::$pr_title"
+      - id: set_pr_template
+        name: Apply PR template
+        run: |
+          pr_template=".github/pr_templates/merge_into_${{ steps.set_branch.outputs.base_branch }}.md"
+          echo "::set-output name=pr_template::$pr_template"
+      - id: check_pr
+        name: Check if PR for release already exists
+        run: echo "::set-output name=count::$(gh pr list -H ${{ steps.set_branch.outputs.head_branch }} -B ${{ steps.set_branch.outputs.base_branch }} | wc -l)"
+      - name: Create PR for release
+        if: ${{ steps.check_pr.outputs.count == 0 }}
+        run: gh pr create -B ${{ steps.set_branch.outputs.base_branch }} -t "${{ steps.set_pr_title.outputs.pr_title }}" -F ${{ steps.set_pr_template.outputs.pr_template }}
