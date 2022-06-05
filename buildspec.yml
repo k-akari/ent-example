@@ -4,11 +4,11 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login --no-include-email --region ${AWS_REGION})
+      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
   build:
     commands:
       - echo Building the Docker image on `date`
-      - docker build --no-cache -f build/app/Dockerfile.prod -t ent-example:latest .
+      - docker build --no-cache -f build/app/Dockerfile.prod -t ent-example .
       - docker tag ent-example:latest ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/ent-example:latest
   post_build:
     commands:
