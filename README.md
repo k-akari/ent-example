@@ -17,6 +17,29 @@ VS Code左下の緑色のアイコンをクリックし、Reopen in Containerを
 go run cmd/app/main.go
 ```
 
+### 1-3. 本番イメージの確認
+1. 以下のように`Dockerfile.prod`の`FROM`文から`public.ecr.aws/docker/library/`を除去する。
+```Dockerfile
+FROM public.ecr.aws/docker/library/golang:1.18-alpine as builder
+↓↓↓
+FROM golang:1.18-alpine as builder
+```
+```Dockerfile
+FROM public.ecr.aws/docker/library/alpine:latest
+↓↓↓
+FROM alpine:latest
+```
+
+2. イメージをビルドする。
+```bash
+docker build --no-cache -f build/app/Dockerfile.prod -t ent-example:latest .
+```
+
+3. コンテナを起動する。
+```bash
+docker run -it -p 8080:8080 --rm ent-example:latest
+```
+
 ## 2. CI/CD
 ### 2-1. CI
 `develop` or `main`ブランチをマージ先としたPRの作成をトリガーとしてGitHub Actionsで静的解析とテストを実行する。
