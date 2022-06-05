@@ -8,7 +8,7 @@ phases:
   build:
     commands:
       - echo Building the Docker image on `date`
-      - docker build --no-cache -t ent-example:latest .
+      - docker build --no-cache -f build/app/Dockerfile.prod -t ent-example:latest .
       - docker tag ent-example:latest ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com/ent-example:latest
   post_build:
     commands:
