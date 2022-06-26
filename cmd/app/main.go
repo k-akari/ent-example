@@ -12,8 +12,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func helloHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World, %s!", r.URL.Path[1:])
+func helthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "OK")
 }
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 	}
 	defer client.Close()
 
-	http.HandleFunc("/hello", helloHandler)
+	http.HandleFunc("/_status", helthCheckHandler)
 	router.RegisterRouter(client)
 
 	server := &http.Server{
