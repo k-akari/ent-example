@@ -17,10 +17,18 @@ services:
       context: .
       dockerfile: ./build/app/Dockerfile.dev
     command: /bin/ash
+    ports:
+      - 8080:8080
     volumes:
       - .:/go/src/project
       - ~/.ssh:/root/.ssh # 要見直し
       - ~/.gitconfig:/root/.gitconfig # 要見直し
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_NAME=database
     stdin_open: true
     tty: true
 volumes:

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"project/ent"
 	"project/router"
 	"time"
@@ -17,7 +18,7 @@ func helthCheckHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	client, err := ent.Open("postgres", "host=db user=user password=password dbname=database sslmode=disable")
+	client, err := ent.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), os.Getenv("DB_PORT") ,os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME")))
 	if err != nil {
 		log.Fatalf("failed opening connection to postgresql: %v", err)
 	}
