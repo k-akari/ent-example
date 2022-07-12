@@ -9,4 +9,4 @@ WORKDIR /app
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /go/src/project/main cmd
 EXPOSE 8080
-ENTRYPOINT ["./cmd"]
+ENTRYPOINT ["/bin/ash"]
