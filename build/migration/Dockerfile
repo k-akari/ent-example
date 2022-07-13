@@ -4,7 +4,8 @@ WORKDIR $APP_HOME
 ADD . $APP_HOME
 RUN go build cmd/migration/main.go
 
-FROM public.ecr.aws/docker/library/alpine:latest
+FROM public.ecr.aws/docker/library/postgres:14-alpine
+ENV LANG ja_JP.utf8
 WORKDIR /app
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /go/src/project/main cmd
