@@ -5,5 +5,6 @@ import (
 )
 
 func RegisterRouter(c *ent.Client) {
+	registerHealthCheckRouter()
 	registerUserRouter(c)
 }

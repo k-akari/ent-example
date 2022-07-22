@@ -13,10 +13,6 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func helthCheckHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "OK")
-}
-
 func main() {
 	client, err := ent.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", os.Getenv("DB_HOST"), os.Getenv("DB_PORT") ,os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME")))
 	if err != nil {
@@ -24,7 +20,6 @@ func main() {
 	}
 	defer client.Close()
 
-	http.HandleFunc("/_status", helthCheckHandler)
 	router.RegisterRouter(client)
 
 	server := &http.Server{
