@@ -20,13 +20,15 @@ func main() {
 	}
 	defer client.Close()
 
-	router.RegisterRouter(client)
+	mux := http.NewServeMux()
+	router.RegisterRouter(mux, client)
 
 	server := &http.Server{
 		Addr:           "0.0.0.0:8080",
 		ReadTimeout:    time.Duration(10 * int64(time.Second)),
 		WriteTimeout:   time.Duration(600 * int64(time.Second)),
 		MaxHeaderBytes: 1 << 20,
+		Handler: mux,
 	}
 	server.ListenAndServe()
 

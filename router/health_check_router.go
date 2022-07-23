@@ -12,8 +12,8 @@ type healthCheckResponse struct {
     Message string `json:"message,omitempty"`
 }
 
-func registerHealthCheckRouter() {
-	http.HandleFunc("/health_check", helthCheckHandler)
+func registerHealthCheckRouter(mux *http.ServeMux) {
+	mux.HandleFunc("/health_check", helthCheckHandler)
 }
 
 func helthCheckHandler(w http.ResponseWriter, r *http.Request) {
