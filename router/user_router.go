@@ -8,8 +8,8 @@ import (
 	"project/usecase"
 )
 
-func registerUserRouter(c *ent.Client) {
-	http.HandleFunc("/users/", handleUsers(c))
+func registerUserRouter(mux *http.ServeMux, c *ent.Client) {
+	mux.HandleFunc("/users/", handleUsers(c))
 }
 
 func handleUsers(c *ent.Client) http.HandlerFunc {

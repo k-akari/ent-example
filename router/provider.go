@@ -1,10 +1,11 @@
 package router
 
 import (
+	"net/http"
 	"project/ent"
 )
 
-func RegisterRouter(c *ent.Client) {
-	registerHealthCheckRouter()
-	registerUserRouter(c)
+func RegisterRouter(mux *http.ServeMux, c *ent.Client) {
+	registerHealthCheckRouter(mux)
+	registerUserRouter(mux, c)
 }
