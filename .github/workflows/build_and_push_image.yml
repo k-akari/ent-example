@@ -28,6 +28,8 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - run: echo "ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}" >> $GITHUB_ENV
+
   build-web-image:
     runs-on: ubuntu-latest
     needs: setup
@@ -35,7 +37,6 @@ jobs:
       - name: Build and push Nginx image to ECR repository
         id: build-web-image
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/eks-web:$IMAGE_TAG -f ./build/web/Dockerfile .
@@ -48,7 +49,6 @@ jobs:
       - name: Build and push application image to ECR repository
         id: build-app-image
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/eks-app:$IMAGE_TAG -f ./build/app/Dockerfile.prod .
@@ -61,7 +61,6 @@ jobs:
       - name: Build and push migration image to ECR repository
         id: build-app-image
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -t $ECR_REGISTRY/eks-migration:$IMAGE_TAG -f ./build/migration/Dockerfile .
