@@ -30,7 +30,7 @@ jobs:
 
       - name: Build and Push images to ECR repositories
         env:
-          VERSION: ${GITHUB_REF##*/}
+          VERSION: $(echo ${GITHUB_REF##*/})
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
           echo ${GITHUB_REF##*/}
