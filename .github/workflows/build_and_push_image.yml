@@ -30,9 +30,11 @@ jobs:
 
       - name: Build and Push images to ECR repositories
         env:
-          VERSION: $(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+          VERSION: ${GITHUB_REF##*/}
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
+          echo ${GITHUB_REF##*/}
+          echo $VERSION
           docker build -t $ECR_REGISTRY/eks-app:$VERSION -f ./build/app/Dockerfile.prod .
           docker build -t $ECR_REGISTRY/eks-web:$VERSION -f ./build/web/Dockerfile .
           docker build -t $ECR_REGISTRY/eks-migration:$VERSION -f ./build/migration/Dockerfile .
