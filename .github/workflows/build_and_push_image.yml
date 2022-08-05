@@ -32,9 +32,10 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/eks-app:${GITHUB_REF##*/} -f ./build/app/Dockerfile.prod .
-          docker build -t $ECR_REGISTRY/eks-web:${GITHUB_REF##*/} -f ./build/web/Dockerfile .
-          docker build -t $ECR_REGISTRY/eks-migration:${GITHUB_REF##*/} -f ./build/migration/Dockerfile .
-          docker push $ECR_REGISTRY/eks-web:${GITHUB_REF##*/}
-          docker push $ECR_REGISTRY/eks-app:${GITHUB_REF##*/}
-          docker push $ECR_REGISTRY/eks-migration:${GITHUB_REF##*/}
+          VERSION=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+          docker build -t $ECR_REGISTRY/eks-app:$VERSION -f ./build/app/Dockerfile.prod .
+          docker build -t $ECR_REGISTRY/eks-web:$VERSION -f ./build/web/Dockerfile .
+          docker build -t $ECR_REGISTRY/eks-migration:$VERSION -f ./build/migration/Dockerfile .
+          docker push $ECR_REGISTRY/eks-web:$VERSION
+          docker push $ECR_REGISTRY/eks-app:$VERSION
+          docker push $ECR_REGISTRY/eks-migration:$VERSION
