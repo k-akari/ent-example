@@ -2,8 +2,8 @@ name: Build and Push Docker Images to ECR Repositories
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
 
 jobs:
   build-and-push-image:
@@ -30,12 +30,12 @@ jobs:
 
       - name: Build and Push images to ECR repositories
         env:
-          IMAGE_TAG: ${{ github.sha }}
+          VERSION: $(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/eks-app:$IMAGE_TAG -f ./build/app/Dockerfile.prod .
-          docker build -t $ECR_REGISTRY/eks-web:$IMAGE_TAG -f ./build/web/Dockerfile .
-          docker build -t $ECR_REGISTRY/eks-migration:$IMAGE_TAG -f ./build/migration/Dockerfile .
-          docker push $ECR_REGISTRY/eks-web:$IMAGE_TAG
-          docker push $ECR_REGISTRY/eks-app:$IMAGE_TAG
-          docker push $ECR_REGISTRY/eks-migration:$IMAGE_TAG
+          docker build -t $ECR_REGISTRY/eks-app:$VERSION -f ./build/app/Dockerfile.prod .
+          docker build -t $ECR_REGISTRY/eks-web:$VERSION -f ./build/web/Dockerfile .
+          docker build -t $ECR_REGISTRY/eks-migration:$VERSION -f ./build/migration/Dockerfile .
+          docker push $ECR_REGISTRY/eks-web:$VERSION
+          docker push $ECR_REGISTRY/eks-app:$VERSION
+          docker push $ECR_REGISTRY/eks-migration:$VERSION
