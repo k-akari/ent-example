@@ -35,7 +35,7 @@ jobs:
           VERSION=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
           docker build -t $ECR_REGISTRY/eks-app:$VERSION -f ./build/app/Dockerfile.prod .
           docker build -t $ECR_REGISTRY/eks-web:$VERSION -f ./build/web/Dockerfile .
-          docker build -t $ECR_REGISTRY/eks-migration:$VERSION -f ./build/migration/Dockerfile .
+          docker build -t $ECR_REGISTRY/eks-migration:latest -f ./build/migration/Dockerfile .
           docker push $ECR_REGISTRY/eks-web:$VERSION
           docker push $ECR_REGISTRY/eks-app:$VERSION
-          docker push $ECR_REGISTRY/eks-migration:$VERSION
+          docker push $ECR_REGISTRY/eks-migration:latest
