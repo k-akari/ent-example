@@ -39,13 +39,23 @@ jobs:
           docker push $ECR_REGISTRY/eks-web:$IMAGE_TAG
           docker push $ECR_REGISTRY/eks-app:$IMAGE_TAG
           docker push $ECR_REGISTRY/eks-migration:$IMAGE_TAG
+      
+      #- name: Update manifest
+      #  run: |
+      #    git config --global user.email ${{ secrets.EMAIL }}
+      #    git config --global user.name k-akari
+      #    git clone https://github.com/k-akari/myk8s.git
+      #    yq write -i myk8s/main/values.yaml front.imageTag $IMAGE_TAG
+      #    git add .
+      #    git commit -m ${{ github.run_number }} -a
+      #    git push origin maine
+      - uses: actions/checkout@v3
+        with:
+          repository: k-akari/myk8s
+          ref: "main"
+          token: ${{ secrets.PAT }}
 
-      - name: Update manifest
-        run: |
-          git config --global user.email ${{ secrets.EMAIL }}
-          git config --global user.name k-akari
-          git clone https://github.com/k-akari/myk8s.git
-          yq write -i myk8s/main/values.yaml front.imageTag $IMAGE_TAG
-          git add .
-          git commit -m ${{ github.run_number }} -a
-          git push origin maine
+      - name: chage docker image
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq eval '.front.imageTag = $IMAGE_TAG' -i /main/values.yaml
