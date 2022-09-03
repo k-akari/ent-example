@@ -46,9 +46,13 @@ jobs:
           path: myk8s
           ref: main
           token: ${{ secrets.PAT }}
+      - name: a
+        working-directory: myk8s
         run: |
           pwd
+          ls
           yq --help
+          git --version
           git config user.name k-akari
           git config user.email ${{ secrets.EMAIL }}
           yq eval '.front.imageTag = test' -i ./main/values.yaml
