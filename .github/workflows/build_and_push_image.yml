@@ -52,8 +52,7 @@ jobs:
         run: |
           git config user.name k-akari
           git config user.email ${{ secrets.EMAIL }}
-          IMAGE_TAG = $IMAGE_TAG
-          yq -i ".front.imageTag = ${IMAGE_TAG}" ./main/values.yaml
+          yq -i ".front.imageTag = "$IMAGE_TAG ./main/values.yaml
           git add .
-          git commit -m "Update image tag to ${IMAGE_TAG}"
+          git commit -m "Update image tag to "$IMAGE_TAG
           git push
