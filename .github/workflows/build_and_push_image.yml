@@ -48,6 +48,8 @@ jobs:
           token: ${{ secrets.PAT }}
   
       - run: |
+          pwd
+          yq --help
           git config user.name k-akari
           git config user.email ${{ secrets.EMAIL }}
           yq eval '.front.imageTag = test' -i ./main/values.yaml
