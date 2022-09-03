@@ -58,4 +58,4 @@ jobs:
       - name: chage docker image
         uses: mikefarah/yq@master
         with:
-          cmd: yq eval '.front.imageTag = $IMAGE_TAG' -i /main/values.yaml
+          cmd: yq eval '.front.imageTag = $IMAGE_TAG' -i myk8s/main/values.yaml
