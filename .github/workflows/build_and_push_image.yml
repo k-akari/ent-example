@@ -46,16 +46,13 @@ jobs:
           path: myk8s
           ref: main
           token: ${{ secrets.PAT }}
-      - name: a
+
+      - name: Update image tag
         working-directory: myk8s
         run: |
-          pwd
-          ls
-          yq --help
-          git --version
           git config user.name k-akari
           git config user.email ${{ secrets.EMAIL }}
-          yq eval '.front.imageTag = test' -i ./main/values.yaml
+          yq -i '.front.imageTag = "test"' ./main/values.yaml
           git add .
           git commit -m "test"
           git push
