@@ -49,6 +49,7 @@ jobs:
 
       - name: Update image tag
         working-directory: myk8s
+        continue-on-error: true
         run: |
           git config user.name k-akari
           git config user.email ${{ secrets.EMAIL }}
