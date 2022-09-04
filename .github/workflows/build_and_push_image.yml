@@ -53,6 +53,11 @@ jobs:
           git config user.name k-akari
           git config user.email ${{ secrets.EMAIL }}
           yq -i '.front.imageTag = "'`printenv IMAGE_TAG`'"' ./main/values.yaml
-          git add .
-          git commit -m "Update image tag to "`printenv IMAGE_TAG`
-          git push
+          git diff --quiet
+          if [[ $? -eq 1 ]]; then
+            git add .
+            git commit -m "Update image tag to "`printenv IMAGE_TAG`
+            git push
+          else
+            echo "No changes"
+          fi
