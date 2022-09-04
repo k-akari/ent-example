@@ -21,8 +21,6 @@ jobs:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT }}:role/role-github
           role-duration-seconds: 1800
 
-      - run: aws sts get-caller-identity
-
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
@@ -40,7 +38,8 @@ jobs:
           docker push $ECR_REGISTRY/eks-app:$IMAGE_TAG
           docker push $ECR_REGISTRY/eks-migration:$IMAGE_TAG
       
-      - uses: actions/checkout@v3
+      - name: Checkout config repository
+        uses: actions/checkout@v3
         with:
           repository: k-akari/myk8s
           path: myk8s
@@ -51,8 +50,6 @@ jobs:
         working-directory: myk8s
         continue-on-error: true
         run: |
-          git config user.name k-akari
-          git config user.email ${{ secrets.EMAIL }}
           yq -i '.front.imageTag = "'`printenv IMAGE_TAG`'"' ./main/values.yaml
           git diff --quiet
           if [[ $? -eq 1 ]]; then
