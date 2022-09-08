@@ -49,4 +49,4 @@ docker run -it -p 8080:8080 --rm ent-example:latest
 ### 2-2. CD
 `main`ブランチの更新イベントをトリガーとしてCodeBuildが走り、イメージをビルドしてECRへプッシュする。
 
-詳しくは`buildspec.yml`を参照
+詳しくは`buildspec.yml`を参照。
